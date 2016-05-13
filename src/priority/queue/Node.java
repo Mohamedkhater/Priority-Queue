@@ -8,12 +8,13 @@ package priority.queue;
 /**
  *
  * @author amr
+ * @param <T>
  */
-public class Node {
+public class Node<T extends Object> {
 
     private int priority;
     private int index;
-    private Object data;
+    private T data;
 
     /**
      * @return the priority
@@ -32,14 +33,14 @@ public class Node {
     /**
      * @return the data
      */
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
     /**
      * @param data the data to set
      */
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -49,7 +50,7 @@ public class Node {
         this.data = null;
     }
 
-    public Node(int priority, int index, Object data) {
+    public Node(int priority, int index, T data) {
         this.priority = priority;
         this.index = index;
         this.data = data;

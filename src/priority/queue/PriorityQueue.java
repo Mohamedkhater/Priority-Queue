@@ -12,10 +12,11 @@ import java.util.HashMap;
 /**
  *
  * @author amr
+ * @param <T> Type of data in node
  */
-public class PriorityQueue {
+public class PriorityQueue<T extends Object> {
 
-    private ArrayList<Node> heap;
+    private ArrayList<Node<T>> heap;
     private HashMap<Integer, Integer> samePriorities;
     private int index;
 
@@ -24,14 +25,20 @@ public class PriorityQueue {
         index = 0;
     }
 
-    public void enqueue(int priority, Object data) {
+    /**
+     * Add a node to the queue
+     *
+     * @param priority Priority of input node
+     * @param data Data of input node
+     */
+    public void enqueue(int priority, T data) {
         Node child = new Node(priority, index++, data);
         heap.add(child);
 
-        if (heap.size() > 1) { // heapify the branch only
+        if (heap.size() > 1) {
             Node parent = heap.get(getParentIndex(heap.size() - 1));
 
-            while (parent.getPriority() < child.getPriority()) {
+            while (parent.getPriority() < child.getPriority()) { // heapify the branch only
                 Collections.swap(heap, heap.indexOf(parent), heap.indexOf(child));
 
                 int newChildIndex = getParentIndex(heap.indexOf(parent));
@@ -43,7 +50,12 @@ public class PriorityQueue {
         }
     }
 
-    public Object dequeue() {
+    /**
+     * Remove a node from the queue
+     *
+     * @return Data of output node
+     */
+    public T dequeue() {
         if (heap.isEmpty()) {
             return null;
         }
@@ -61,8 +73,9 @@ public class PriorityQueue {
         int minKey = samePriorities.isEmpty() ? -1 : Collections.min(samePriorities.keySet());
 
         if (minKey != -1) {
-            int newIndex = heap.get(samePriorities.get(minKey)).getIndex();
-            if (heap.get(0).getIndex() > newIndex) {
+            int newRootIndex = heap.get(samePriorities.get(minKey)).getIndex();
+
+            if (heap.get(0).getIndex() > newRootIndex) {
                 Collections.swap(heap, 0, samePriorities.get(minKey));
             }
         }
@@ -77,9 +90,14 @@ public class PriorityQueue {
             heapify(0);
         }
 
-        return data;
+        return (T) data;
     }
 
+    /**
+     * Applies the heap algorithm to build a maximum heap
+     *
+     * @param rootIndex Index to start heap algorithm from
+     */
     private void heapify(int rootIndex) {
         Node rootNode = heap.get(rootIndex);
         int maxChildIndex = getMaxChild(rootIndex);
@@ -97,24 +115,44 @@ public class PriorityQueue {
 
     }
 
+    /**
+     * Get the child node with maximum priority
+     *
+     * @param index Index of parent node
+     * @return Index of child with maximum priority
+     */
     private int getMaxChild(int index) {
+        int leftChildIndex = getLeftChild(index);
+        int rightChildIndex = getRightChild(index);
 
-        if (getLeftChild(index) >= heap.size()) {
+        if (leftChildIndex >= heap.size()) {
             return -1;
         }
-        if (getRightChild(index) >= heap.size()) {
-            return getLeftChild(index);
-        } else if (heap.get(getLeftChild(index)).getPriority() > heap.get(getRightChild(index)).getPriority()) {
-            return getLeftChild(index);
+        if (rightChildIndex >= heap.size()) {
+            return leftChildIndex;
+        } else if (heap.get(leftChildIndex).getPriority() > heap.get(rightChildIndex).getPriority()) {
+            return leftChildIndex;
         } else {
-            return getRightChild(index);
+            return rightChildIndex;
         }
     }
 
+    /**
+     * Checks if a node is a leaf or not
+     *
+     * @param index Index of node
+     * @return True if node is a leaf, False otherwise
+     */
     private boolean isLeaf(int index) {
         return getLeftChild(index) >= heap.size();
     }
 
+    /**
+     * Gets the index of a parent node
+     *
+     * @param childIndex Index of node
+     * @return Index of parent node
+     */
     private int getParentIndex(int childIndex) {
         /*
          * children are at 2*i+1, 2*i+2
@@ -123,17 +161,28 @@ public class PriorityQueue {
         return (childIndex - 1) / 2;
     }
 
+    /**
+     * Gets the index of the left child
+     *
+     * @param parentIndex Index of parent node
+     * @return Index of left child node
+     */
     private int getLeftChild(int parentIndex) {
         return (2 * parentIndex) + 1;
     }
 
+    /**
+     *
+     * @param parentIndex Index of parent node
+     * @return Index of left child node
+     */
     private int getRightChild(int parentIndex) {
         return (2 * parentIndex) + 2;
     }
 
     @Override
     public String toString() {
-        for (Node node : heap) {
+        for (Node<T> node : heap) {
             System.out.println(node.getData());
         }
         return "";

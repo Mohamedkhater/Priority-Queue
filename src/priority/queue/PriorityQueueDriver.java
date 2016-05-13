@@ -16,7 +16,7 @@ public class PriorityQueueDriver {
      */
     public static void main(String[] args) {
 
-        PriorityQueue pq = new PriorityQueue();
+        PriorityQueue<String> pq = new PriorityQueue<>();
 
         /*for (int i = 1; i <= 10; i++) {
          pq.enqueue((int) (Math.random() * 10), ("Node " + i));
@@ -29,7 +29,7 @@ public class PriorityQueueDriver {
         pq.enqueue(2, "Node 6");
         pq.enqueue(2, "Node 7");
         pq.enqueue(1, "Node 8");
-        
+
         Object obj;
         while ((obj = pq.dequeue()) != null) {
             System.out.println(obj);
