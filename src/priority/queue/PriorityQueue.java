@@ -64,9 +64,12 @@ public class PriorityQueue<T extends Object> {
 
         int rootPriority = heap.get(0).getPriority();
 
+        Node<T> currentNode;
+
         for (int i = 1; i < heap.size(); i++) {
-            if (rootPriority == heap.get(i).getPriority()) {
-                samePriorities.put(heap.get(i).getIndex(), i);
+            currentNode = heap.get(i);
+            if (rootPriority == currentNode.getPriority()) {
+                samePriorities.put(currentNode.getIndex(), i);
             }
         }
 
